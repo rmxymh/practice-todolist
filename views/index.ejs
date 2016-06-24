@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
-</html>
+<% layout('layout') -%>
+
+<h1><%= title %></h1>
+<form action="/create" method="post" accept-charset="utf-8">
+	<input type="text" name="content" />
+</form>
+
+<% todos.forEach( function(todo) { %>
+	<p><%= todo.content %></p>
+<% }); %>
