@@ -6,5 +6,12 @@
 </form>
 
 <% todos.forEach( function(todo) { %>
-	<p><%= todo.content %></p>
+	<p>
+		<span>
+			<a href="/edit/<%= todo._id %>" title="Update this todo item"><%= todo.content %></a>
+		</span>
+		<span>
+			<a href="/destroy/<%= todo._id %>" title="Delete this todo item">Delete</a>
+		</span>
+	</p>
 <% }); %>
