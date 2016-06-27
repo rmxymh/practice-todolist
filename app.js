@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var engine = require('ejs-locals');
 
 var routes = require('./routes/index');
-var apis = require('./routes/api');
+var apis = require('./routes/api/todo');
 //var users = require('./routes/users');
 
 var app = express();

@@ -1,6 +1,3 @@
-var utils = require('../utils');
-var uuid = require('node-uuid');
-
 var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
@@ -97,7 +94,12 @@ router.put('/api/todo/:id', function(req, res) {
 		var user_id = req.cookies ? req.cookies.user_id : undefined;
 
 		if( todo.user_id !== req.cookies.user_id) {
-			return utils.forbidden(res);
+			var result = {
+					success: false,
+					message: "Forbidden"
+				}
+			res.send(JSON.stringify(result));
+			return;
 		}
 
 		todo.content = req.body.content;
@@ -124,7 +126,12 @@ router.delete('/api/todo/:id', function(req, res) {
 		var user_id = req.cookies ? req.cookies.user_id : undefined;
 
 		if( todo.user_id !== req.cookies.user_id) {
-			return utils.forbidden(res);
+			var result = {
+					success: false,
+					message: "Forbidden"
+				}
+			res.send(JSON.stringify(result));
+			return;
 		}
 
 		todo.remove(function(err, todo) {
