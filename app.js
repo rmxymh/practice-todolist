@@ -7,8 +7,9 @@ var bodyParser = require('body-parser');
 var engine = require('ejs-locals');
 
 var routes = require('./routes/index');
-var apis = require('./routes/api/todo');
-//var users = require('./routes/users');
+var userView = require('./routes/user');
+var todoAPI = require('./routes/api/todo');
+var userAPI = require('./routes/api/user');
 
 var app = express();
 
@@ -26,8 +27,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(routes.current_user);
-app.use('/', routes);
-app.use(apis);
+app.use(routes);
+app.use(userView);
+app.use(todoAPI);
+app.use(userAPI);
 //app.use('/users', users);
 
 /// catch 404 and forwarding to error handler

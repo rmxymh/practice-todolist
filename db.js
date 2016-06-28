@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 require('./models/todo');
-console.log("connect: initialize schema Todo");
+require('./models/user');
 
 module.exports.connect = function(callback) {
 	mongoose.connect('mongodb://localhost/express-todo');
