@@ -1,0 +1,36 @@
+<% layout('layout') -%>
+<% script('javascripts/sha256.js') -%>
+<% script('javascripts/todo.js') -%>
+
+
+<div class="row">
+<div class="col-sm-12 jumbotron bg-primary">
+	<h2>Add Todo Item</h2>
+	<form class="form-inline" accept-charset="utf-8">
+		<div class="row">
+			<div class="form-group col-sm-12">
+				<label class="sr-only" for="todoContent">Todo Item</label>
+				<div class="input-group col-sm-10">
+					<input id="todoContent" class="form-control" type="text" name="todoContent" placeholder="Todo Item..."/>
+				</div>
+				<button type="submit" class="btn btn-primary">Add</button>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+
+<% todos.forEach( function(todo) { %>
+<div class="alert alert-info">
+<div class="row">
+	<div class="col-sm-10">
+			<span class="glyphicon glyphicon-tag" style="padding-right: 10px;"></span><%= todo.content %>
+	</div>
+	<div class="col-sm-2">
+		<button class="btn btn-warning btn-sm">Edit</button>
+		<button class="btn btn-danger btn-sm">Delete</button>
+		<!-- <a href="/destroy/<%= todo._id %>" title="Delete this todo item">Delete</a> -->
+	</div>
+</div>
+</div>
+<% }); %>

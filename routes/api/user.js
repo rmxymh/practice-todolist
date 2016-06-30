@@ -6,6 +6,7 @@ var uuid = require('node-uuid');
 var router = express.Router();
 
 var User = mongoose.model('User');
+var Session = mongoose.model('Session');
 
 router.post('/api/user', function(req, res) {
 	var user = req.body.user;
@@ -63,14 +64,24 @@ router.post('/api/user/auth', function(req, res) {
 			if(challenge !== undefined && verify !== undefined && verify === challenge) {
 				// Generate a token
 				result.token = uuid.v4();
+
+				// Update the session
+				Session.update({user_id: username},
+							   {user_id: username, key: result.token},
+							   {upsert: true},
+							   function(err) {
+								   console.log("Failed to setup a session: ", err);
+								   result.status = "Failed to setup the session.";
+								   result.token = "";
+								   res.status(500).send(JSON.stringify(result));
+							   });
+
 				res.send(JSON.stringify(result));
 			} else {
 				result.status = "Forbidden";
 				result.token = "";
 				res.status(403).send(JSON.stringify(result));
 			}
-
-
 		})
 });
 

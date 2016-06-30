@@ -7,9 +7,12 @@ var bodyParser = require('body-parser');
 var engine = require('ejs-locals');
 
 var routes = require('./routes/index');
+var todoView = require('./routes/todo');
 var userView = require('./routes/user');
 var todoAPI = require('./routes/api/todo');
 var userAPI = require('./routes/api/user');
+
+var utils = require('./utils');
 
 var app = express();
 
@@ -24,13 +27,19 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(routes.current_user);
 app.use(routes);
 app.use(userView);
-app.use(todoAPI);
+app.use(todoView);
 app.use(userAPI);
+
+app.use(utils.sessionChecker);
+// The following pages are protected by sessions.
+app.use(todoAPI);
+
 //app.use('/users', users);
 
 /// catch 404 and forwarding to error handler

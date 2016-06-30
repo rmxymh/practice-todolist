@@ -1,13 +1,19 @@
 var mongoose = require('mongoose');
 var express = require('express');
+var utils = require('../../utils');
 var router = express.Router();
 
 var Todo = mongoose.model('Todo');
 
 // Create
 router.post('/api/todo', function(req, res) {
+	if(req.user_id === undefined) {
+		utils.apiUnauthorized(res);
+		return;
+	}
+
 	new Todo({
-		user_id: req.cookies.user_id,
+		user_id: req.user_id,
 		content: req.body.content,
 		updated_at: Date.now()
 	}).save(function(err, todo, count) {
@@ -27,9 +33,12 @@ router.post('/api/todo', function(req, res) {
 
 // READ
 router.get('/api/todo', function(req, res) {
-	var user_id = req.cookies ? req.cookies.user_id : undefined;
+	if(req.user_id === undefined) {
+		utils.apiUnauthorized(res);
+		return;
+	}
 
-	Todo.find({ user_id: user_id } ).
+	Todo.find({ user_id: req.user_id } ).
 		 sort('-updated_at').
 		 exec(function(err, todos, count) {
 			 var items = [];
@@ -51,9 +60,12 @@ router.get('/api/todo', function(req, res) {
 });
 
 router.get('/api/todo/:id', function(req, res) {
-	var user_id = req.cookies ? req.cookies.user_id : undefined;
+	if(req.user_id === undefined) {
+		utils.apiUnauthorized(res);
+		return;
+	}
 
-	Todo.find({ user_id: user_id, _id: req.params.id.toString() })
+	Todo.find({ user_id: req.user_id, _id: req.params.id.toString() })
 		.sort('-updated_at')
 		.exec()
 		.then(function(todos) {
@@ -88,12 +100,13 @@ router.get('/api/todo/:id', function(req, res) {
 
 // Update
 router.put('/api/todo/:id', function(req, res) {
-	var user_id = req.cookies ? req.cookies.user_id : undefined;
+	if(req.user_id === undefined) {
+		utils.apiUnauthorized(res);
+		return;
+	}
 
 	Todo.findById(req.params.id, function(err, todo) {
-		var user_id = req.cookies ? req.cookies.user_id : undefined;
-
-		if( todo.user_id !== req.cookies.user_id) {
+		if( todo.user_id !== req.user_id) {
 			var result = {
 					success: false,
 					message: "Forbidden"
@@ -122,10 +135,13 @@ router.put('/api/todo/:id', function(req, res) {
 
 // Delete
 router.delete('/api/todo/:id', function(req, res) {
-	Todo.findById( req.params.id, function(err, todo) {
-		var user_id = req.cookies ? req.cookies.user_id : undefined;
+	if(req.user_id === undefined) {
+		utils.apiUnauthorized(res);
+		return;
+	}
 
-		if( todo.user_id !== req.cookies.user_id) {
+	Todo.findById( req.params.id, function(err, todo) {
+		if( todo.user_id !== req.user_id) {
 			var result = {
 					success: false,
 					message: "Forbidden"
@@ -145,7 +161,6 @@ router.delete('/api/todo/:id', function(req, res) {
 					message: msg
 				}
 			res.send(JSON.stringify(result));
-
 		});
 	});
 });
