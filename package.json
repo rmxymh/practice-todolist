@@ -13,9 +13,9 @@
     "body-parser": "~1.0.0",
     "debug": "~0.7.4",
     "ejs": "~0.8.5",
-	"ejs-locals": "*",
-    "mongoose" : "*",
-	"bluebird" : "*",
-	"node-uuid": "*"
+	"ejs-locals": "~1.0.2",
+    "mongoose" : "~4.5.1",
+	"bluebird" : "~2.10.2*",
+	"node-uuid": "~1.4.7"
   }
 }
