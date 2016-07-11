@@ -70,13 +70,18 @@ router.post('/api/user/auth', function(req, res) {
 							   {user_id: username, key: result.token},
 							   {upsert: true},
 							   function(err) {
-								   console.log("Failed to setup a session: ", err);
-								   result.status = "Failed to setup the session.";
-								   result.token = "";
-								   res.status(500).send(JSON.stringify(result));
+								   if(err) {
+									   console.log("Failed to setup a session: ", err);
+									   result.status = "Failed to setup the session.";
+									   result.token = "";
+									   res.status(500).send(JSON.stringify(result));
+									   res.end();
+								   }
+								   else {
+										res.send(JSON.stringify(result));
+										res.end();
+								   }
 							   });
-
-				res.send(JSON.stringify(result));
 			} else {
 				result.status = "Forbidden";
 				result.token = "";

@@ -11,9 +11,6 @@ User.login = function(username, password) {
 	var data = secret + username + secret + username + secret;
 	var challenge = Sha256.hash(data);
 
-	console.log(data);
-	console.log(challenge);
-
 	$.ajax({
 		type: "POST",
 		url: "/api/user/auth",
@@ -23,7 +20,15 @@ User.login = function(username, password) {
 		},
 		success: function(data) {
 			console.log("Success");
-			console.log(data);
+			resp = JSON.parse(data);
+			console.log(resp["status"]);
+			console.log(resp["token"]);
+
+			window.location.replace("todo?session=" + resp["token"]);
+		},
+		error: function(data) {
+			$("#errorMsg").html("Invalid username or password.");
+			$("#errorMsg").show();
 		}
 	});
 };
@@ -45,3 +50,10 @@ User.create = function(username, password) {
 		}
 	});
 };
+
+function login() {
+	var name = $("#username").val();
+	var pass = $("#password").val();
+
+	User.login(name, pass);
+}
