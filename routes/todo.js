@@ -17,9 +17,11 @@ router.get('/todo', function(req, res) {
 			console.log("GET /");
 			res.render('todo', {
 					title: 'Express Todo Example',
-					todos: todos
+					todos: todos,
+					session: req.query.session
 			});
 		});
+	console.log(req.query.session);
 });
 
 module.exports = router;

@@ -1,5 +1,4 @@
 <% layout('layout') -%>
-<% script('javascripts/sha256.js') -%>
 <% script('javascripts/todo.js') -%>
 
 
@@ -13,7 +12,7 @@
 				<div class="input-group col-sm-10">
 					<input id="todoContent" class="form-control" type="text" name="todoContent" placeholder="Todo Item..."/>
 				</div>
-				<button type="submit" class="btn btn-primary">Add</button>
+				<button id="addTodoBtn" class="btn btn-primary">Add</button>
 			</div>
 		</div>
 	</form>
@@ -27,10 +26,50 @@
 			<span class="glyphicon glyphicon-tag" style="padding-right: 10px;"></span><%= todo.content %>
 	</div>
 	<div class="col-sm-2">
-		<button class="btn btn-warning btn-sm">Edit</button>
-		<button class="btn btn-danger btn-sm">Delete</button>
-		<!-- <a href="/destroy/<%= todo._id %>" title="Delete this todo item">Delete</a> -->
+		<button class="btn btn-warning btn-sm" todo-act="edit" todo-id="<%= todo._id %>" todo-content="<%= todo.content %>">Edit</button>
+		<button class="btn btn-danger btn-sm" todo-act="delete" todo-id="<%= todo._id %>">Delete</button>
+		<!-- <a href="/destroy/<%= todo._id %>?session=<%= session %>" title="Delete this todo item">Delete</a> -->
 	</div>
 </div>
 </div>
 <% }); %>
+
+<!-- modal -->
+<div class="modal fade" id="modifyTodoItemModal" tabindex="-1" role="dialog" aria-labelledby="modifyTodoItemLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="modifyTodoItemLabel">Modify Todo Item</h4>
+			</div>
+			<div class="modal-body">
+				<input id="modTodoContent" class="form-control" type="text" placeholder="Todo Item..."/>
+				<input id="modTodoItemId" type="hidden" value=""/>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button id="modifyTodoBtn" type="button" class="btn btn-warning">Modify</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+		$("#addTodoBtn").click(createTodoItem);
+		$('button[todo-act="delete"]').each(function(index) {
+			$(this).click(function() {
+				deleteTodoItem($(this).attr("todo-id"));
+			});
+		});
+		$('button[todo-act="edit"]').each(function(index) {
+			$(this).click(function() {
+				console.log("edit todo item " + $(this).attr("todo-id"));
+				$("#modTodoContent").val($(this).attr("todo-content"));
+				$("#modTodoItemId").val($(this).attr("todo-id"));
+				$("#modifyTodoItemModal").modal("toggle");
+			});
+		});
+		$("#modifyTodoBtn").click(modifyTodoItem);
+	});
+</script>
