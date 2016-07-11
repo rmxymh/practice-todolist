@@ -30,14 +30,13 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(routes.current_user);
 app.use(routes);
 app.use(userView);
-app.use(todoView);
 app.use(userAPI);
 
 app.use(utils.sessionChecker);
 // The following pages are protected by sessions.
+app.use(todoView);
 app.use(todoAPI);
 
 //app.use('/users', users);

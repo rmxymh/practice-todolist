@@ -25,14 +25,11 @@ exports.sessionChecker = function(req, res, next) {
 		   .then(function(session) {
 			   if(session.key == key) {
 				   req.user_id = session.user_id;
-			       next();
 			   }
-			   else {
-				   exports.apiUnauthorized();
-			   }
+			   next();
 		   })
 		   .catch(function(err) {
-			   exports.apiUnauthorized();
+			   next();
 		   });
 };
 
