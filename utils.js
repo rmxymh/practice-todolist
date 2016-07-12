@@ -26,10 +26,14 @@ exports.sessionChecker = function(req, res, next) {
 			   if(session.key == key) {
 				   req.user_id = session.user_id;
 			   }
-			   next();
+			   if(next !== undefined) {
+			       next();
+			   }
 		   })
 		   .catch(function(err) {
-			   next();
+			   if(next !== undefined) {
+			       next();
+			   }
 		   });
 };
 

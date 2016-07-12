@@ -19,16 +19,23 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
-				<button id="loginBtn" type="submit" class="btn btn-primary">Login</button>
+			<div class="col-sm-offset-2 col-sm-2">
+				<button id="actionBtn" class="btn btn-primary"><%= action %></button>
+			</div>
+			<div class="col-sm-4">
+				<% if(useradd_link) { %>
+					<span><a href="/useradd">Create a new account</a></span>
+				<% } %>
 			</div>
 		</div>
 	</form>
+
+
 </div>
 
 <script>
 	$(document).ready(function() {
 		$("#errMsg").hide();
-		$("#loginBtn").click(login);
+		$("#actionBtn").click(<%= apiname %>);
 	});
 </script>

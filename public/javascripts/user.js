@@ -21,8 +21,6 @@ User.login = function(username, password) {
 		success: function(data) {
 			console.log("Success");
 			resp = JSON.parse(data);
-			console.log(resp["status"]);
-			console.log(resp["token"]);
 
 			window.location.replace("todo?session=" + resp["token"]);
 		},
@@ -45,8 +43,16 @@ User.create = function(username, password) {
 			secret: secret
 		},
 		success: function(data) {
-			console.log("Success");
 			console.log(data);
+			resp = JSON.parse(data);
+			User.login(username, password);
+		},
+		error: function(data) {
+			console.log(data);
+			resp = JSON.parse(data.responseText);
+			console.log(resp.error);
+			$("#errorMsg").html(resp["error"]);
+			$("#errorMsg").show();
 		}
 	});
 };
@@ -56,4 +62,14 @@ function login() {
 	var pass = $("#password").val();
 
 	User.login(name, pass);
+	return false;
 }
+
+function useradd() {
+	var name = $("#username").val();
+	var pass = $("#password").val();
+
+	User.create(name, pass);
+	return false;
+}
+

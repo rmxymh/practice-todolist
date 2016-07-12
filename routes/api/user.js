@@ -2,6 +2,7 @@ var crypto = require('crypto');
 var express = require('express');
 var mongoose = require('mongoose');
 var uuid = require('node-uuid');
+var utils = require('../../utils');
 
 var router = express.Router();
 
@@ -19,22 +20,38 @@ router.post('/api/user', function(req, res) {
 		return;
 	}
 
-	new User({
-		user_id: user,
-		secret: secret
-	}).save(function(err, user, count) {
-		var msg = "Success";
-		if (err !== undefined) {
-			var result = {
-				success: err !== undefined,
-				message: JSON.stringify(err),
+	User.find({ user_id: user } )
+		.exec()
+		.then(function(users) {
+			var verify = null;
+
+			if(users.length > 0) {
+				console.log(users);
+				res.status(409).send(JSON.stringify({
+					error: "User " + user + " has been created."
+				}));
+				res.end();
+			} else {
+				new User({
+					user_id: user,
+					secret: secret
+				}).save(function(err, user, count) {
+					var msg = "Success";
+					if (err !== undefined) {
+						var result = {
+							success: err !== undefined,
+							message: JSON.stringify(err),
+						}
+						res.send(JSON.stringify(result));
+						res.end();
+					} else {
+						res.status(500).send(JSON.stringify({
+							error: err
+						}));
+						res.end();
+					}
+				});
 			}
-			res.send(JSON.stringify(result));
-		} else {
-			res.status(500).send(JSON.stringify({
-				error: err
-			}));
-		}
 	});
 });
 
@@ -51,9 +68,6 @@ router.post('/api/user/auth', function(req, res) {
 				var user = users[0];
 				var data = user.secret + user.user_id + user.secret + user.user_id + user.secret;
 				verify = crypto.createHash('sha256').update(data).digest('hex');
-
-				console.log(verify);
-				console.log(challenge);
 			}
 
 			var result = {
@@ -86,8 +100,30 @@ router.post('/api/user/auth', function(req, res) {
 				result.status = "Forbidden";
 				result.token = "";
 				res.status(403).send(JSON.stringify(result));
+				res.end();
 			}
 		})
+});
+
+router.delete('/api/user/auth', function(req, res) {
+	var key = req.query.session;
+
+	Session.findOne({key: key})
+		   .exec()
+		   .then(function(session) {
+			   if(session.key == key) {
+		           Session.remove({ user_id: session.user_id },
+				   				  function(err, removed) {
+			           					res.status(200).end();
+		           				});
+			   }
+		   })
+		   .catch(function(err) {
+			    console.log(err);
+				res.status(500).end();
+		   });
+
+
 });
 
 module.exports = router;

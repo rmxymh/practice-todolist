@@ -86,3 +86,17 @@ function modifyTodoItem() {
 
 	Todo.modify(id, content, session);
 }
+
+function logout() {
+	var session = getParameterByName("session");
+	$.ajax({
+		type: "DELETE",
+		url: "/api/user/auth?session=" + session,
+		success: function(data) {
+			window.location.replace("/login");
+		},
+		error: function(data) {
+			window.location.replace("/login");
+		}
+	});
+}

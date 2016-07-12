@@ -1,6 +1,11 @@
 <% layout('layout') -%>
 <% script('javascripts/todo.js') -%>
 
+<div class="row">
+<div class="col-sm-offset-11 col-sm-1">
+	<button id="logoutBtn" class="btn btn-info btn-small">Logout</button>
+</div>
+</div>
 
 <div class="row">
 <div class="col-sm-12 jumbotron bg-primary">
@@ -56,7 +61,8 @@
 
 <script>
 	$(document).ready(function() {
-		$("#addTodoBtn").click(createTodoItem);
+		$('#logoutBtn').click(logout);
+		$('#addTodoBtn').click(createTodoItem);
 		$('button[todo-act="delete"]').each(function(index) {
 			$(this).click(function() {
 				deleteTodoItem($(this).attr("todo-id"));
