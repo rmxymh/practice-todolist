@@ -17,12 +17,13 @@ function getParameterByName(name, url) {
 
 var Todo = {}
 
-Todo.create = function(content, session) {
+Todo.create = function(content, comment, session) {
 	$.ajax({
 		type: "POST",
 		url: "/api/todo?session=" + session,
 		data: {
-			content: content
+			content: content,
+			comment: comment
 		},
 		success: function(data) {
 			window.location.replace("todo?session=" + session);
@@ -34,12 +35,13 @@ Todo.create = function(content, session) {
 	});
 }
 
-Todo.modify = function(id, content, session) {
+Todo.modify = function(id, content, comment, session) {
 	$.ajax({
 		type: "PUT",
 		url: "/api/todo/" + id + "?session=" + session,
 		data: {
-			content: content
+			content: content,
+			comment: comment
 		},
 		success: function(data) {
 			window.location.replace("todo?session=" + session);
@@ -68,9 +70,10 @@ Todo.delete = function(id, session) {
 
 function createTodoItem() {
 	var content = $("#todoContent").val();
+	var comment = $("#todoComment").val();
 	var session = getParameterByName("session");
 
-	Todo.create(content, session);
+	Todo.create(content, comment, session);
 }
 
 function deleteTodoItem(id) {
@@ -81,10 +84,11 @@ function deleteTodoItem(id) {
 
 function modifyTodoItem() {
 	var content = $("#modTodoContent").val();
+	var comment = $("#modTodoComment").val();
 	var id = $("#modTodoItemId").val();
 	var session = getParameterByName("session");
 
-	Todo.modify(id, content, session);
+	Todo.modify(id, content, comment, session);
 }
 
 function logout() {

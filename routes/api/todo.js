@@ -15,6 +15,7 @@ router.post('/api/todo', function(req, res) {
 	new Todo({
 		user_id: req.user_id,
 		content: req.body.content,
+		comment: req.body.comment,
 		updated_at: Date.now()
 	}).save(function(err, todo, count) {
 		var msg = "Success";
@@ -43,9 +44,14 @@ router.get('/api/todo', function(req, res) {
 		 exec(function(err, todos, count) {
 			 var items = [];
 			 todos.forEach(function(todo) {
+				 var comment = todo.comment;
+				 if(comment === undefined) {
+					 comment = "";
+				 }
 				 var item = {
 					 id: todo._id,
 					 content: todo.content,
+					 comment: comment,
 					 update: todo.updated_at
 				 };
 				 items.push(item);
@@ -71,10 +77,16 @@ router.get('/api/todo/:id', function(req, res) {
 		.then(function(todos) {
 			 var items = [];
 			 if(todos !== undefined) {
+				var comment = todo.comment;
+				if(comment === undefined) {
+					comment = "";
+				}
+
 			 	todos.forEach(function(todo) {
 					 var item = {
 						 id: todo._id,
 						 content: todo.content,
+						 comment: todo.comment,
 						 update: todo.updated_at
 					 };
 					 items.push(item);
@@ -116,6 +128,7 @@ router.put('/api/todo/:id', function(req, res) {
 		}
 
 		todo.content = req.body.content;
+		todo.comment = req.body.comment;
 		todo.updated_at = Date.now();
 		todo.save(function(err, todo, count) {
 			var msg = "Success";
